@@ -39,7 +39,7 @@ async fn get_file(path: web::Path<String>) -> impl Responder {
     HttpResponse::NotFound().insert_header(("Access-Control-Allow-Origin", "*")).body("File not found")
 }
 
-#[get("/image/{file}")]
+#[get("/images/{file}")]
 async fn get_image(path: web::Path<String>) -> impl Responder {
     let file_path = String::from("./images/".to_string() + &path.into_inner());
 
