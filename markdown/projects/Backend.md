@@ -22,7 +22,7 @@ I wanted this website to be a way to talk about my projects, so I decided on hav
 
 ![Old Database scheme](../../images/old_db_schema.PNG)
 
-As you can see in the schema above, I wanted to be able to have several authors. Even though this is a personal website, and was unnecessary, it would be usefull for [other](/projects/GNF) projects.
+As you can see in the schema above, I wanted to be able to have several authors. Even though this is a personal website, and was unnecessary, it would be usefull for [other](/projects/gnf) projects.
 My backend needed some way to authenticate these authors, since I did not want unauthorized users to create or delete articles.
 So, since I liked Python, I landed on Django.
 
@@ -81,9 +81,7 @@ blaming work and exams taking up too much of my freetime.
 I returned to the project with a newfound interest in learning Rust. I had used it a few times, in smaller projects. It's really fun too use, and one of my favourite things about it, is the `Option<T>`
 and `Result<T, E>` monads. Not having to deal with nullpointer exceptions, is a dream come true.
 
-After extensive research, ~~asking ChatGPT~~, I discovered [Actix](https://actix.rs/) and [rusqlite](https://github.com/rusqlite/rusqlite) as essential crates for the job.
-
-Along with these new tools, I had a new plan.
+After extensive research, ~~asking ChatGPT~~, I discovered [Actix](https://actix.rs/).
 
 ### Improved Database Schema
 
@@ -125,27 +123,26 @@ I also created an endpoint for retrieving images, which looks like this:
 
 ```rust
 #[get("/images/{file}")]
-async fn get_image(path: web::Path<String>) -> impl Responder {
+pub async fn get_image(path: web::Path<String>) -> impl Responder {
     let file_path = String::from("./images/".to_string() + &path.into_inner());
 
-    if let Ok(res) = web::block(|| std::fs::read(file_path)).await {
-        if let Ok(con) = res {
-            return HttpResponse::Ok()
-                .content_type("image/png")
-                .body(con);
-        }
+    if let Ok(res) = std::fs::read(file_path) {
+        return HttpResponse::Ok()
+            .insert_header(("Access-Control-Allow-Origin", "*"))
+            .content_type("image/png")
+            .body(res);
     }
-    HttpResponse::NotFound().body("File not found")
-}
+
+    HttpResponse::NotFound().insert_header(("Access-Control-Allow-Origin", "*")).body("File not found")
 ```
 
-Which works similar to the markdown article endpoint. I use this to change the local-url to the image, to an api call for the same image.
+I need this endpoint, because when I write these articles, I use a relative-url, which doesnt relate to the frontend. So in the frontend, I render this:
 
 ```markdown
 ![Old Database scheme](../../images/old_db_schema.PNG)
 ```
 
-Gets changed to:
+as this:
 
 ```html
 <img
@@ -156,24 +153,6 @@ Gets changed to:
 
 And I can now have as many images as I want in my articles, and where ever I want.
 
-### Image Endpoint
-
-To display images, I needed a method to serve them from the backend. I achieved this by storing the image filenames in the database and creating an endpoint for image retrieval:
-
-```rust
-#[get("/image/{file}")]
-async fn get_image(path: web::Path<String>) -> impl Responder {
-    let file_path = String::from("./images/".to_string() + &path.into_inner());
-
-    if let Ok(res) = web::block(|| std::fs::read(file_path)).await {
-        if let Ok(con) = res {
-            return HttpResponse::Ok()
-                .content_type("image/png")
-                .body(con);
-        }
-    }
-    HttpResponse::NotFound().body("File not found")
-}
-```
+And now the project has everything it needs. Now all that's left, is the [frontend](/projects/frontend)
 
 For further details about the project, you can visit my [GitHub repository](https://github.com/Neelzee/nilsmf-backend).

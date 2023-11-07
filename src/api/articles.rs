@@ -6,7 +6,7 @@ use crate::utils::funcs::get_file_content;
 pub async fn get_article(path: web::Path<String>) -> impl Responder {
     let file_path = path.into_inner();
 
-    let res = get_file_content(String::from("./markdown/projects/".to_string() + &file_path));
+    let res = get_file_content(String::from("./markdown/articles/".to_string() + &file_path));
     
     if let Ok(con) = res {
         return HttpResponse::Ok()

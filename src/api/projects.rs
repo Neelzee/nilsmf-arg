@@ -7,8 +7,8 @@ use crate::utils::funcs::get_file_content;
 
 #[get("/projects/all")]
 pub async fn get_projects() -> impl Responder {
-    let res: Result<Vec<String>, io::Error> = async {
-        let mut file_contents: Vec<String> = Vec::new();
+    let res: Result<Vec<(String, String)>, io::Error> = async {
+        let mut file_contents: Vec<(String, String)> = Vec::new();
 
         for entry in WalkDir::new("./markdown/recap-project/").into_iter().filter_map(|e| e.ok()) {
             if entry.file_type().is_file() {
@@ -18,7 +18,10 @@ pub async fn get_projects() -> impl Responder {
                 let mut file_content = String::new();
                 file.read_to_string(&mut file_content)?;
 
-                file_contents.push(file_content);
+                if let Some(file_name) = entry.file_name().to_str() {
+                    file_contents.push((file_name.to_string(), file_content));
+                }
+
             }
         }
 
