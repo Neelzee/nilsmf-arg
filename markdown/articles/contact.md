@@ -3,7 +3,7 @@
 Feel free to reach out to me through the following channels:
 
 - **Email**: [nilsien2001@gmail.com](mailto:nilsien2001@gmail.com)
-  - I ~~like watching the unread email counter count up~~ read emails
+  - I respond in 2-3 business months
 - **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/nils-michael-fitjar-4346a3234/)
   - I have found no use for this.
 - **GitHub**: [GitHub Profile](https://github.com/Neelzee)
