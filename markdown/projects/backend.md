@@ -2,6 +2,7 @@
 
 The backend of my website is powered by Rust and the Actix web framework. This combination ensures a robust and efficient server-side architecture for delivering a seamless user experience.
 
+
 ## Why make a backend?
 
 One of the first things I do when starting a new project, is finding reasons _not_ to do it. This is mainly because I always have several ongoing projects, but also because I find it more motivating working on a project, if there are good reasons for its existance.
@@ -14,6 +15,7 @@ And for people who are interested in it, I can bug them with a lot of uneeded in
 
 So, I need a backend, now I just need to find out what I need to make this project succeed.
 
+
 ### Scope
 
 I wanted to be able to use what I learned in making this project, and the code, for other projects.
@@ -25,6 +27,7 @@ I wanted this website to be a way to talk about my projects, so I decided on hav
 As you can see in the schema above, I wanted to be able to have several authors. Even though this is a personal website, and was unnecessary, it would be usefull for [other](/projects/gnf) projects.
 My backend needed some way to authenticate these authors, since I did not want unauthorized users to create or delete articles.
 So, since I liked Python, I landed on Django.
+
 
 ### Initial Attempt with Django
 
@@ -76,12 +79,14 @@ At the same time I wanted too use CSRF-tokens, since I've _heard_ they are secur
 But I spent several days on this aswell, without figuring it out, and eventually gave up,
 blaming work and exams taking up too much of my freetime.
 
+
 ### Transition to Rust and Actix
 
 I returned to the project with a newfound interest in learning Rust. I had used it a few times, in smaller projects. It's really fun too use, and one of my favourite things about it, is the `Option<T>`
 and `Result<T, E>` monads. Not having to deal with nullpointer exceptions, is a dream come true.
 
 After extensive research, ~~asking ChatGPT~~, I discovered [Actix](https://actix.rs/).
+
 
 ### Improved Database Schema
 
