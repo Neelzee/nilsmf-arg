@@ -27,7 +27,7 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     builder
-        .set_certificate_chain_file("/etc/letsencrypt/live/nilsmf.com/cert.pem")
+        .set_certificate_chain_file("cert.pem")
         .unwrap();
 
     HttpServer::new(|| {
@@ -46,7 +46,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 fn load_encrypted_private_key() -> PKey<Private> {
-    let mut file = File::open("/etc/letsencrypt/live/nilsmf.com/privkey.pem").unwrap();
+    let mut file = File::open("privkey.pem").unwrap();
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).expect("Failed to read file");
 
