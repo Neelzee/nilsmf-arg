@@ -11,7 +11,7 @@ COPY . /var/www/nilsmf/nilsmf_backend
 RUN cargo build --release
 
 # Copy the certificates
-COPY /etc/letsencrypt/live/nilsmf.com/ /etc/letsencrypt/live/nilsmf.com/
+COPY /etc/letsencrypt/live/nilsmf.com /etc/letsencrypt/live/nilsmf.com
 
 # Build your application
 RUN cargo install --path .
