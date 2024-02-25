@@ -1,15 +1,15 @@
-mod utils;
 mod api;
+mod utils;
 
+use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use api::articles::get_article;
 use api::images::get_image;
 use api::projects::{get_project, get_projects};
-use actix_cors::Cors;
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("Starting backend");
     HttpServer::new(|| {
         let cors = Cors::permissive();
 
