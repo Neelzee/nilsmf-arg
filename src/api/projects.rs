@@ -2,6 +2,7 @@ use actix_web::{get, HttpResponse, Responder, web};
 use std::fs::File;
 use std::io::{self, Read};
 use walkdir::WalkDir;
+use crate::utils::consts::PATH;
 
 use crate::utils::funcs::get_file_content;
 
@@ -10,7 +11,7 @@ pub async fn get_projects() -> impl Responder {
     let res: Result<Vec<(String, String)>, io::Error> = async {
         let mut file_contents: Vec<(String, String)> = Vec::new();
 
-        for entry in WalkDir::new("./markdown/recap-project/").into_iter().filter_map(|e| e.ok()) {
+        for entry in WalkDir::new(format!("{}{}", PATH, "markdown/recap-project/")).into_iter().filter_map(|e| e.ok()) {
             if entry.file_type().is_file() {
                 let file_path = entry.path();
 
@@ -46,7 +47,7 @@ pub async fn get_projects() -> impl Responder {
 pub async fn get_project(path: web::Path<String>) -> impl Responder {
     let file_path = path.into_inner() + ".md";
 
-    let res = get_file_content(String::from("./markdown/projects/".to_string() + &file_path));
+    let res = get_file_content(format!("{}{}{}", PATH, "markdown/projects/", &file_path));
     
     if let Ok(con) = res {
         return HttpResponse::Ok()

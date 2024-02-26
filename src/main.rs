@@ -15,6 +15,7 @@ use std::{
     fs::File,
     io::{self, Read as _},
 };
+use crate::utils::consts::PATH;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -27,8 +28,8 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
 
     builder
-        .set_certificate_chain_file("cert.pem")
-        .unwrap();
+        .set_certificate_chain_file(format!("{}{}", PATH, "cert.pem"))
+        .expect("Failed finding cert.pem");
 
     HttpServer::new(|| {
         App::new()
@@ -46,7 +47,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 fn load_encrypted_private_key() -> PKey<Private> {
-    let mut file = File::open("privkey.pem").unwrap();
+    let mut file = File::open(format!("{}{}", PATH, "privkey.pem")).expect("Failed finding privkey.pem");
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).expect("Failed to read file");
 

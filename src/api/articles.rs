@@ -1,12 +1,12 @@
 use actix_web::{get, HttpResponse, Responder, web};
 
-use crate::utils::funcs::get_file_content;
+use crate::utils::{funcs::get_file_content, consts::PATH};
 
 #[get("/articles/{file}")]
 pub async fn get_article(path: web::Path<String>) -> impl Responder {
     let file_path = path.into_inner();
 
-    let res = get_file_content(String::from("./markdown/articles/".to_string() + &file_path));
+    let res = get_file_content(String::from(format!("{}{}{}", PATH, "markdown/articles/", &file_path)));
     
     if let Ok(con) = res {
         return HttpResponse::Ok()
