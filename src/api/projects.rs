@@ -1,12 +1,11 @@
-use actix_web::{get, HttpResponse, Responder, web};
 use std::fs::File;
 use std::io::{self, Read};
-use walkdir::WalkDir;
 use crate::utils::consts::PATH;
 
 use crate::utils::funcs::get_file_content;
 
-#[get("/projects/all")]
+//#[get("/projects/all")]
+/*
 pub async fn get_projects() -> impl Responder {
     let res: Result<Vec<(String, String)>, io::Error> = async {
         let mut file_contents: Vec<(String, String)> = Vec::new();
@@ -58,3 +57,4 @@ pub async fn get_project(path: web::Path<String>) -> impl Responder {
 
     HttpResponse::NotFound().insert_header(("Access-Control-Allow-Origin", "*")).body(String::from("File not found: ".to_string() + &file_path))
 }
+*/

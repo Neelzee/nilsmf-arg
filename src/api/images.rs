@@ -1,7 +1,7 @@
-use actix_web::{get, HttpResponse, Responder, web};
 use crate::utils::consts::PATH;
 
-#[get("/images/{file}")]
+//#[get("/images/{file}")]
+/*
 pub async fn get_image(path: web::Path<String>) -> impl Responder {
     let file_path = String::from(format!("{}{}{}", PATH, "images/", &path.into_inner()));
 
@@ -14,3 +14,4 @@ pub async fn get_image(path: web::Path<String>) -> impl Responder {
     
     HttpResponse::NotFound().insert_header(("Access-Control-Allow-Origin", "*")).body("File not found")
 }
+*/
