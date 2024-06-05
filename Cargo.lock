@@ -831,6 +831,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "openssl-src"
+version = "300.1.2+3.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "94773a6131a4d91f737a31debb0b3258964a47d923ef539c8be1d496dfb5145d"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "openssl-sys"
 version = "0.9.99"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -838,6 +847,7 @@ checksum = "22e1bf214306098e4832460f797824c05d25aacdf896f64a985fb0fd992454ae"
 dependencies = [
  "cc",
  "libc",
+ "openssl-src",
  "pkg-config",
  "vcpkg",
 ]

@@ -1,7 +1,8 @@
 mod api;
-// mod db;
+mod db;
 mod utils;
 
+use crate::utils::consts::PATH;
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use api::articles::get_article;
@@ -15,7 +16,6 @@ use std::{
     fs::File,
     io::{self, Read as _},
 };
-use crate::utils::consts::PATH;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -47,7 +47,8 @@ async fn main() -> std::io::Result<()> {
 }
 
 fn load_encrypted_private_key() -> PKey<Private> {
-    let mut file = File::open(format!("{}{}", PATH, "privkey.pem")).expect("Failed finding privkey.pem");
+    let mut file =
+        File::open(format!("{}{}", PATH, "privkey.pem")).expect("Failed finding privkey.pem");
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).expect("Failed to read file");
 
