@@ -1,91 +1,100 @@
-use rusqlite::Connection;
+use anyhow::{Context, Result};
+use postgres::Client;
 
-pub fn setup(conn: &Connection) -> Result<(), rusqlite::Error> {
-    conn.execute(
+pub async fn setup(conn: &mut Client) -> Result<()> {
+    conn.batch_execute(
         "
+        CREATE TYPE TAG as ENUM('Project', 'Rust', 'Database', 'Postgresql', 'Rocket');
+
         CREATE TABLE article (
-            id INTEGER PRIMARY KEY,
-            title NVARCHAR(255),
-            content NVARCHAR(255),
-            path NVARCHAR(255),
-            created DATE NOT NULL,
-            edited DATE,
-            published BOOLEAN NOT NULL,
-            tags NVARCHAR(255)
-          );
-        ",
-        [],
-    )?;
+            iid INT GENERATED ALWAYS AS IDENTITY,
+            content TEXT NOT NULL,
+            description TEXT NOT NULL,
+            PRIMARY KEY (iid)
+        );
+        
+        CREATE TABLE meta_article (
+            iid INT GENERATED ALWAYS AS IDENTITY,
+            title TEXT NOT NULL,
+            created_date VARCHAR(8) NOT NULL,
+            created_time VARCHAR(7) NOT NULL,
+            last_edit_date VARCHAR(8),
+            last_edit_time VARCHAR(7),
+            author_id INT,
+            content_table_id INT,
+            tags TAG[],
+            PRIMARY KEY (iid)
+            CONSTRAINT fk_author
+                FOREIGN KEY(author_id)
+                    REFERENCES author(iid)
+            CONSTRAINT fk_article
+                FOREIGN KEY(content_table_id)
+                    REFERENCES article(iid)
+        );
 
-    conn.execute(
-        "
-        CREATE TABLE img_ref (
-            id INTEGER PRIMARY KEY,
-            article_id INTEGER NOT NULL,
-            img_id INTEGER NOT NULL,
-            FOREIGN KEY (article_id) REFERENCES article (id),
-            FOREIGN KEY (img_id) REFERENCES img (id)
-          );
-        ",
-        [],
-    )?;
+        CREATE TABLE author (
+            iid INT GENERATED ALWAYS AS IDENTITY,
+            uid INT,
+            name TEXT,
+            email TEXT
+            CONSTRAINT fk_user
+                FOREIGN KEY(uid)
+                    REFERENCES user(iid)
+        );
 
-    conn.execute(
-        "
-        CREATE TABLE img (
-            id INTEGER PRIMARY KEY,
-            img BLOB NOT NULL,
-            path NVARCHAR(255),
-            tags NVARCHAR(255)
-          );
-        ",
-        [],
-    )?;
+        CREATE TABLE meta_article_edit (
+            iid INT GENERATED ALWAYS AS IDENTITY,
+            edit_date VARCHAR(8),
+            edit_time VARCHAR(7),
+            article_id INT,
+            changes_id INT,
+            CONSTRAINT fk_article
+                FOREIGN KEY(article_id)
+                    REFERENCES article(iid)
+            CONSTRAINT fk_changes
+                FOREIGN KEY(changes_id)
+                    REFERENCES article_edit(iid)
+        );
 
-    conn.execute(
-        "
-        CREATE TABLE mini_article (
-            id INTEGER PRIMARY KEY,
-            title NVARCHAR(255),
-            content NVARCHAR(255),
-            img_id INTEGER,
-            FOREIGN KEY (img_id) REFERENCES img (id)
-          );
-        ",
-        [],
-    )?;
+        CREATE TABLE article_edit (
+            iid INT GENERATED ALWAYS AS IDENTITY,
+            new_content TEXT,
+            add_images INT,
+            rm_images INT,
+            add_tags TAG[],
+            rm_tags TAG[]
+            CONSTRAINT fk_add_image_article
+                FOREIGN KEY(add_images)
+                    REFERENCES image_article(iid)
+            CONSTRAINT fk_rm_image_article
+                FOREIGN KEY(rm_images)
+                    REFERENCES image_article(iid)
+        );
 
-    conn.execute(
-        "
-        CREATE TABLE img_ref_article (
-            img_ref_article_id INTEGER,
-            article_id INTEGER,
-            PRIMARY KEY (img_ref_article_id, article_id),
-            FOREIGN KEY (img_ref_article_id) REFERENCES img_ref (id),
-            FOREIGN KEY (article_id) REFERENCES article (id)
-          );
-        ",
-        [],
-    )?;
+        CREATE TABLE image (
+            iid INT GENERATED ALWAYS AS IDENTITY,
+            title TEXT NOT NULL,
+            alt TEXT NOT NULL,
+            src BLOB NOT NULL,
+            tag TAG[]
+        );
 
-    Ok(())
+        CREATE TABLE image_article (
+            iid INT GENERATED ALWAYS AS IDENTITY,
+            image_id INT,
+            article_id
+            CONSTRAINT fk_image
+                FOREIGN KEY(image_id)
+                    REFERENCES image(iid)
+            CONSTRAINT fk_article
+                FOREIGN KEY(article_id)
+                    REFERENCES article(iid)
+        );
+        ",
+    )
+    .context("Failed setting up db")
 }
 
-/*
-
--- Create article table
-
-
--- Create img_ref table
-
-
--- Create img table
-
-
--- Create mini_article table
-
-
--- Create img_ref_article table
-
-
-*/
+pub async fn serialize_test(conn: &mut Client) -> Result<()> {
+    Ok(())
+}

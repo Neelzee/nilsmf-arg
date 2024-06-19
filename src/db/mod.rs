@@ -1,5 +1,7 @@
+use anyhow::Result;
+
 pub mod setup;
 
-pub async fetch_blog(id: String) -> Result<[u8]> {
+pub async fn fetch_blog(id: String) -> Result<()> {
     todo!()
 }
